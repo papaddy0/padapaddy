@@ -23,18 +23,356 @@ body{
 background:var(--bg);
 display:flex;
 justify-content:center;
+overflow-x: hidden; /* กันอิโมจิล้นออกด้านข้าง */
+position: relative;
+min-height: 100vh;
 }
+
+/* --- สไตล์สำหรับอิโมจิลอยหลัง --- */
+.floating-emoji {
+position: fixed;
+color: rgba(177, 151, 252, 0.3); /* สีม่วงจางๆ */
+font-size: 20px;
+user-select: none;
+pointer-events: none; /* ไม่ให้ทับปุ่ม */
+z-index: -1; /* อยู่หลังเนื้อหา */
+animation: floatAround infinite linear;
+}
+
+@keyframes floatAround {
+0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+10% { opacity: 1; }
+90% { opacity: 1; }
+100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+/* --- สไตล์สำหรับหัวใจตอนคลิก --- */
+.click-heart {
+position: absolute;
+color: var(--main);
+font-size: 24px;
+pointer-events: none;
+animation: heartFadeOut 0.8s ease-out forwards;
+z-index: 9999;
+}
+
+@keyframes heartFadeOut {
+0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+100% { transform: translate(-50%, -150%) scale(1.5); opacity: 0; }
+}
+
 
 .container{
 max-width:500px;
 width:100%;
 padding:20px 15px 40px;
+position: relative; /* ให้ container อยู่บนอิโมจิพื้นหลัง */
+z-index: 1;
 }
 
 .section{
 background:var(--white);
 border-radius:20px;
 padding:25px 20px;
+margin-bottom:20px;
+box-shadow:0 8px 20px rgba(0,0,0,0.05);
+border:2px solid var(--main);
+position: relative;
+overflow: hidden; /* ครอบอิโมจิรอบโลโก้ */
+}
+
+h1,h2,h3{color:var(--dark);}
+.center{text-align:center;}
+
+/* --- ปรับปรุงส่วนโลโก้และอิโมจิรอบๆ --- */
+.logo-wrapper {
+position: relative;
+width: 150px;
+height: 150px;
+margin: 0 auto 20px;
+}
+
+.logo{
+width:100%;height:100%;
+border-radius:50%;
+overflow:hidden;
+box-shadow:0 6px 20px var(--glow);
+position: relative;
+z-index: 2; /* อยู่เหนืออิโมจิที่ลอยรอบๆ */
+}
+
+.logo img{width:100%;height:100%;object-fit:cover;}
+
+/* อิโมจิลอยรอบโลโก้ */
+.logo-decoration {
+position: absolute;
+color: var(--main);
+font-size: 18px;
+animation: floatUpDown 3s infinite ease-in-out;
+opacity: 0.8;
+z-index: 1;
+}
+
+@keyframes floatUpDown {
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-10px); }
+}
+
+.badges{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+margin-bottom:20px;
+}
+
+.badge{
+background:#fff;
+padding:8px 16px;
+border-radius:25px;
+box-shadow:0 4px 10px var(--glow);
+font-size:13px;
+color:var(--dark);
+}
+
+.btn{
+display:block;
+text-align:center;
+padding:14px;
+border-radius:25px;
+text-decoration:none;
+margin-top:15px;
+font-weight:500;
+transition: 0.3s;
+cursor: pointer;
+}
+
+.btn-outline{
+background:#fff;
+border:2px dashed var(--main);
+color:var(--dark);
+}
+
+.btn-main{
+background:var(--main);
+color:#fff;
+}
+
+.btn:hover {
+transform: translateY(-3px);
+box-shadow: 0 5px 15px var(--glow);
+}
+
+.step{
+display:flex;
+align-items:center;
+gap:12px;
+margin-bottom:12px;
+}
+
+.step-num{
+background:var(--main);
+color:#fff;
+width:26px;height:26px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:13px;
+}
+
+.price-row{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+background:#fffcfd;
+padding:10px 15px;
+border-radius:15px;
+transition: 0.3s;
+}
+
+.price-row:hover {
+background: #f0ebff;
+}
+
+.price-tag{
+background:var(--main);
+color:#fff;
+padding:3px 12px;
+border-radius:20px;
+font-size:14px;
+}
+
+.footer{
+text-align:center;
+margin-top:30px;
+}
+
+.socials{
+display:flex;
+gap:8px;
+justify-content:center;
+margin-top:15px;
+}
+
+.socials a{
+flex:1;
+max-width:100px;
+text-align:center;
+padding:8px;
+border-radius:25px;
+background:#fff;
+text-decoration:none;
+color:var(--dark);
+font-size:13px;
+border:1px solid #f0ebff;
+transition: 0.3s;
+}
+
+.socials a:hover {
+background: #f0ebff;
+transform: scale(1.05);
+}
+
+.small{font-size:12px;opacity:.7;margin-top:10px;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="section center" style="border:none;box-shadow:none;background:transparent;">
+
+<div class="logo-wrapper">
+<div class="logo-decoration" style="top:-10px; left:-10px; animation-delay: 0s;">♡</div>
+<div class="logo-decoration" style="top:50px; left:-25px; animation-delay: 0.5s;">✿</div>
+<div class="logo-decoration" style="top:-15px; right:-10px; animation-delay: 1s;">✿</div>
+<div class="logo-decoration" style="bottom:20px; right:-20px; animation-delay: 1.5s;">♡</div>
+
+<div class="logo">
+<img src="papaddyjsi.png" alt="Papaddy Logo">
+</div>
+</div>
+
+<h1>Papaddy ✿</h1>
+<p style="color:var(--dark);opacity:.8;margin:10px 0 20px;">
+รับทำป้าย เเอพพรีเมี่ยม 24 Hours ˚˖𓍢ִ໋🦢˚
+</p>
+
+<div class="badges">
+<div class="badge">ㅤ♡รับทำป้าย</div>
+<div class="badge">ㅤ♡เเอปพรีเมี่ยม</div>
+</div>
+
+<a href="https://docs.google.com/spreadsheets/d/1V0PWpH1MFnA2Jw686bdZR_-lXejP2eiEzp2rAGcYfOY/edit?usp=sharing" target="_blank" class="btn btn-outline">
+เช็คคิวงานป้าย 📋
+</a>
+</div>
+
+<div class="section">
+<h2>✿ เงื่อนไขการสั่งงานป้าย</h2>
+
+<div class="step"><div class="step-num">1</div><div>รองานปกติภายใน 24 ชม.</div></div>
+<div class="step"><div class="step-num">2</div><div>ติดคิวรอประมาณ 1-2 วัน</div></div>
+<div class="step"><div class="step-num">3</div><div>งานเร่ง +60.- (รอ 3-4 ชม.)</div></div>
+<div class="step"><div class="step-num">!</div><div>ชำระเงิน = ล็อคคิว</div></div>
+<div class="step"><div class="step-num">x</div><div>สั่งแล้วยกเลิกคืนเงิน 50% เท่านั้น</div></div>
+
+<a href="https://drive.google.com/drive/folders/1SX9TY0PaGhso-Ge4jUuT9nx5e4KegEsp?usp=drive_link" target="_blank" class="btn btn-main">ดูตัวอย่างงาน</a>
+</div>
+
+<div class="section">
+<h2>♡ จิ้มเพื่อดูข้อมูลต่างๆ </h2>
+
+<a href="https://drive.google.com/drive/folders/1ZbP6hi-qFNYV1QUlNl12XkUHySPvw-Yq?usp=drive_link" target="_blank" class="btn btn-main" style="margin-top:0;">♡ รายละเอียดสั่งทำป้าย</a>
+<a href="https://drive.google.com/drive/folders/1OPEAJ_drUFfZTGrR7h7CYMMIQHPP0Rcj?usp=drive_link" target="_blank" class="btn btn-main">♡ รายละเอียดสั่งเเอพพรีเมี่ยม</a>
+<a href="https://drive.google.com/drive/folders/1GJsGVwmpvU8GSYBBLFn91h-9_o-wLYpw?usp=drive_link" target="_blank" class="btn btn-main">♡ รายละเอียดพรีเเอคเเอพพรีเมี่ยม</a>
+
+<div style="margin-top:20px; border-top: 1px dashed var(--main); padding-top:10px;">
+<div class="price-row"><a href="https://drive.google.com/drive/folders/1l_6CHfTJD8dmZfFP_hW0ATHAnfZcjomF?usp=drive_link" target="_blank" style="text-decoration:none; color:inherit; display:block; width:100%;">เลือกของตกเเต่ง</a><span class="price-tag">Click</span></div>
+<div class="price-row"><a href="https://drive.google.com/drive/folders/1q4A2_8yBH5xFxk8bDEabHMBNcrW7Heow?usp=drive_link" target="_blank" style="text-decoration:none; color:inherit; display:block; width:100%;">เลือกตัวตูน</a><span class="price-tag">Click</span></div>
+</div>
+</div>
+
+<div class="footer">
+<a href="https://lin.ee/xbQgeBH" target="_blank" class="btn btn-main">สั่งงาน/สอบถามทาง LINE 🎀</a>
+
+<div class="socials">
+<a href="https://www.facebook.com/profile.php?id=61554192600355" target="_blank">Facebook</a>
+<a href="https://line.me/ti/p/LfBtdhlrVa" target="_blank">Line</a>
+<a href="#">Instagram</a>
+</div>
+
+<p class="small">
+© 2026 Papaddy ✿ - All Rights Reserved
+</p>
+</div>
+
+</div>
+
+<script>
+// --- Script 1: สร้างอิโมจิลอยละล่องในพื้นหลัง ---
+function createFloatingEmojis() {
+const emojis = ['♡', '✿'];
+const body = document.body;
+
+for (let i = 0; i < 20; i++) { // สร้าง 20 อัน
+const emojiEl = document.createElement('div');
+emojiEl.className = 'floating-emoji';
+emojiEl.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+
+// สุ่มตำแหน่งเริ่มต้นและคุณสมบัติ
+emojiEl.style.left = Math.random() * 100 + 'vw';
+emojiEl.style.top = Math.random() * 100 + 'vh';
+emojiEl.style.fontSize = (Math.random() * 15 + 15) + 'px'; // ขนาด 15-30px
+emojiEl.style.animationDuration = (Math.random() * 10 + 10) + 's'; // ความเร็ว 10-20 วินาที
+emojiEl.style.animationDelay = (Math.random() * 5) + 's';
+
+body.appendChild(emojiEl);
+}
+}
+
+// --- Script 2: สร้างหัวใจตอนคลิก ---
+function createClickHeart(e) {
+// สร้าง Element หัวใจ
+const heart = document.createElement('div');
+heart.className = 'click-heart';
+heart.innerText = '♡';
+
+// กำหนดตำแหน่ง (รองรับทั้ง Click และ Touch)
+let x, y;
+if (e.type === 'touchstart') {
+x = e.touches[0].clientX;
+y = e.touches[0].clientY;
+} else {
+x = e.clientX;
+y = e.clientY;
+}
+
+heart.style.left = x + 'px';
+heart.style.top = (y + window.scrollY) + 'px'; // บวก scrollY เพื่อให้ตรงจุดแม้เลื่อนหน้าจอ
+
+document.body.appendChild(heart);
+
+// ลบ Element ออกเมื่อ Animation จบ
+setTimeout(() => {
+heart.remove();
+}, 800);
+}
+
+// เริ่มทำงานเมื่อโหลดหน้าการ
+window.onload = function() {
+createFloatingEmojis();
+
+// เพิ่ม Event Listener สำหรับการคลิกและจิ้ม
+document.addEventListener('click', createClickHeart);
+document.addEventListener('touchstart', createClickHeart, {passive: true});
+};
+</script>
+
+</body>
+</html>padding:25px 20px;
 margin-bottom:20px;
 box-shadow:0 8px 20px rgba(0,0,0,0.05);
 border:2px solid var(--main);
