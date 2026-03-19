@@ -8,27 +8,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-:root {
-    --bg: #F3F0FF; 
-    --main: #B197FC;
-    --dark: #7048E8;
-    --white: #FFFFFF;
-    --pink: #FF87B2; /* สีชมพูเพิ่มเติมสำหรับเอฟเฟกต์ */
-    --glow: rgba(177, 151, 252, 0.4);
+:root{
+    --bg:#FFF0F5; /* ชมพูอ่อนแบบนมๆ */
+    --main:#FFB7CE; /* ชมพูซอฟต์ */
+    --dark:#D3869B;
+    --purple:#B197FC;
+    --white:#FFFFFF;
+    --glow:rgba(255, 183, 206, 0.4);
 }
 
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Mitr', sans-serif; }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
 
-body {
-    background: var(--bg);
-    display: flex;
-    justify-content: center;
-    overflow-x: hidden;
-    position: relative;
-    min-height: 100vh;
-}
-
-/* --- 1. หน้า Loading Screen --- */
+/* --- 1. Loading Screen --- */
 #loader {
     position: fixed;
     top: 0; left: 0;
@@ -42,128 +33,203 @@ body {
 }
 
 .heart-loader {
-    font-size: 60px;
-    color: var(--pink);
-    animation: heartBeat 1.2s infinite ease-in-out, heartRotate 2s infinite linear;
+    font-size: 50px;
+    color: var(--main);
+    animation: heartBeat 1.2s infinite ease-in-out, rotateHeart 2s infinite linear;
 }
 
-@keyframes heartBeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.3); }
-}
-
-@keyframes heartRotate {
+@keyframes rotateHeart {
     0% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(180deg) scale(1.3); }
+    50% { transform: rotate(180deg) scale(1.2); }
     100% { transform: rotate(360deg) scale(1); }
 }
 
-/* --- 2. พื้นหลังคลื่นน้ำ (Animated Waves) --- */
-.ocean { 
-  height: 150px; width: 100%;
-  position: fixed; bottom: 0; left: 0;
-  background: transparent; z-index: -1;
+@keyframes heartBeat {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+body {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* --- 2. Wave Background --- */
+.wave-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    z-index: -1;
+    opacity: 0.6;
 }
 
 .wave {
-  background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg') repeat-x; 
-  position: absolute; bottom: 0;
-  width: 6400px; height: 100%;
-  animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) infinite;
-  transform: translate3d(0, 0, 0);
-  opacity: 0.3;
-}
-
-@keyframes wave {
-  0% { margin-left: 0; }
-  100% { margin-left: -1600px; }
-}
-
-/* --- 3. ปรับปรุงหัวใจตอนคลิก --- */
-.click-heart {
     position: absolute;
-    color: var(--pink);
-    font-size: 45px; /* ใหญ่ขึ้นตามคำขอ */
-    text-shadow: 0 0 10px rgba(255, 135, 178, 0.8); /* เพิ่มแสงสีชมพู */
+    bottom: 0;
+    width: 200%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,30 C150,90 400,0 600,30 C800,60 1050,0 1200,30 L1200,120 L0,120 Z" fill="%23FFB7CE"/></svg>');
+    background-size: 50% 100%;
+    animation: waveMove 10s linear infinite;
+}
+
+.wave.v2 { opacity: 0.4; animation-duration: 7s; bottom: 5px; }
+
+@keyframes waveMove {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* --- 3. Floating Emojis & Decor --- */
+.floating-emoji {
+    position: fixed;
+    color: var(--main);
+    font-size: 20px;
+    user-select: none;
     pointer-events: none;
-    animation: heartPop 0.8s ease-out forwards;
+    z-index: -1;
+    animation: floatAround infinite linear;
+    opacity: 0.5;
+}
+
+@keyframes floatAround {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+/* --- 4. Multi-Layer Heart Click --- */
+.heart-ring {
+    position: absolute;
+    pointer-events: none;
+    border: 2px solid var(--main);
+    border-radius: 50%;
+    animation: ringOut 0.8s ease-out forwards;
     z-index: 9999;
 }
 
+.click-heart {
+    position: absolute;
+    color: var(--main);
+    font-size: 40px; /* ขนาดใหญ่ขึ้น */
+    pointer-events: none;
+    text-shadow: 0 0 10px rgba(255,183,206,0.5);
+    animation: heartPop 0.8s ease-out forwards;
+    z-index: 9998;
+}
+
 @keyframes heartPop {
-    0% { transform: translate(-50%, -50%) scale(0.2) rotate(0deg); opacity: 1; }
-    100% { transform: translate(-50%, -180%) scale(1.8) rotate(20deg); opacity: 0; }
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+    100% { transform: translate(-50%, -180%) scale(1.8); opacity: 0; }
 }
 
-.container {
-    max-width: 500px; width: 100%;
-    padding: 20px 15px 100px;
-    position: relative; z-index: 1;
+@keyframes ringOut {
+    0% { width: 0; height: 0; opacity: 1; transform: translate(-50%, -50%); }
+    100% { width: 100px; height: 100px; opacity: 0; transform: translate(-50%, -50%); }
 }
 
-/* --- 4. ตกแต่งกรอบ (Section Decor) --- */
-.section {
-    background: var(--white);
-    border-radius: 30px; /* มนขึ้น */
-    padding: 25px 20px;
-    margin-bottom: 25px;
-    box-shadow: 0 10px 0px var(--main); /* เงาแบบหนาๆ สไตล์สติกเกอร์ */
-    border: 3px solid var(--main);
+/* --- 5. Container & Section Style --- */
+.container{
+    max-width:500px;
+    width:100%;
+    padding:20px 15px 40px;
+    z-index: 1;
+}
+
+.section{
+    background:var(--white);
+    border-radius:30px; /* มนขึ้น */
+    padding:25px 20px;
+    margin-bottom:20px;
+    box-shadow:0 10px 25px rgba(211, 134, 155, 0.15);
+    border: 3px solid #FFF; /* ขอบขาวตัดใน */
+    outline: 2px dashed var(--main); /* กรอบเส้นประด้านนอก */
+    outline-offset: -8px;
     position: relative;
 }
 
-/* เพิ่มจุดกลมๆ มุมกรอบให้น่ารัก */
-.section::before {
-    content: '✿';
-    position: absolute;
-    top: -12px; right: 20px;
-    background: var(--white);
-    padding: 0 5px;
-    color: var(--main);
-    font-size: 20px;
-}
-
+/* --- Logo Decor --- */
 .logo-wrapper {
     position: relative;
-    width: 150px; height: 150px;
-    margin: 0 auto 20px;
+    width: 160px; height: 160px;
+    margin: 0 auto 25px;
 }
 
-.logo {
-    width: 100%; height: 100%;
-    border-radius: 50%;
-    border: 5px solid #fff;
-    overflow: hidden;
-    box-shadow: 0 6px 20px var(--glow);
+.logo{
+    width:100%; height:100%;
+    border-radius:50%;
+    overflow:hidden;
+    border: 5px solid var(--white);
+    box-shadow:0 8px 25px var(--glow);
     z-index: 2;
+    position: relative;
 }
 
-.logo img { width: 100%; height: 100%; object-fit: cover; }
+.logo img{width:100%;height:100%;object-fit:cover;}
 
-.btn {
-    display: block; text-align: center;
-    padding: 14px; border-radius: 20px;
-    text-decoration: none; margin-top: 15px;
-    font-weight: 500; transition: 0.3s;
+.logo-decoration {
+    position: absolute;
+    color: var(--main);
+    font-size: 24px;
+    animation: bounceAround 3s infinite ease-in-out;
+    z-index: 1;
+}
+
+@keyframes bounceAround {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(10px, -15px) rotate(20deg); }
+}
+
+/* --- Buttons --- */
+.btn{
+    display:block;
+    text-align:center;
+    padding:16px;
+    border-radius:50px;
+    text-decoration:none;
+    margin-top:15px;
+    font-weight:500;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
+    border: none;
 }
 
-.btn-main {
+.btn-main{
+    background: linear-gradient(135deg, var(--main), var(--purple));
+    color:#fff;
+    box-shadow: 0 4px 15px var(--glow);
+}
+
+.btn-outline{
+    background:#fff;
+    border:2px dashed var(--main);
+    color:var(--dark);
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px var(--glow);
+}
+
+.step-num{
     background: var(--main);
     color: #fff;
-    border-bottom: 4px solid var(--dark);
+    width: 30px; height: 30px;
+    border-radius: 10px; /* ทรงเหลี่ยมมน */
+    display: flex; align-items: center; justify-content: center;
 }
 
-.btn-main:hover { transform: scale(1.02); filter: brightness(1.1); }
-
-.price-row {
-    display: flex; justify-content: space-between;
-    margin-bottom: 10px; background: #F8F5FF;
-    padding: 12px 15px; border-radius: 15px;
-    border-left: 5px solid var(--pink);
+.price-row{
+    display:flex; justify-content:space-between;
+    margin-bottom:10px; background:#FFF5F8;
+    padding:12px 15px; border-radius:20px;
 }
-
-.footer { text-align: center; margin-top: 30px; padding-bottom: 50px;}
 </style>
 </head>
 
@@ -173,70 +239,120 @@ body {
     <div class="heart-loader">❤</div>
 </div>
 
-<div class="ocean">
-  <div class="wave"></div>
-  <div class="wave" style="bottom: 10px; opacity: 0.5; animation-duration: 10s;"></div>
+<div class="wave-container">
+    <div class="wave"></div>
+    <div class="wave v2"></div>
 </div>
 
 <div class="container">
-    <div class="section center" style="border:none; box-shadow:none; background:transparent;">
+
+    <div class="section center" style="border:none; outline:none; background:transparent; box-shadow:none;">
         <div class="logo-wrapper">
-            <div class="logo"><img src="Messenger_creation_07B09451-EC95-4BD7-994C-EB1523158F98.jpeg" alt="Logo"></div>
+            <div class="logo-decoration" style="top:-10px; left:-10px; animation-delay: 0s;">✿</div>
+            <div class="logo-decoration" style="top:50%; left:-30px; animation-delay: 0.5s;">♡</div>
+            <div class="logo-decoration" style="top:-15px; right:-10px; animation-delay: 1s;">♡</div>
+            <div class="logo-decoration" style="bottom:20px; right:-30px; animation-delay: 1.5s;">✿</div>
+
+            <div class="logo">
+                <img src="Messenger_creation_07B09451-EC95-4BD7-994C-EB1523158F98.jpeg" alt="Papaddy Logo">
+            </div>
         </div>
-        <h1>Papaddy ✿</h1>
-        <p>รับทำป้าย เเอพพรีเมี่ยม 24 Hours ˚˖𓍢ִ໋🦢˚</p>
+
+        <h1 style="font-size: 2.2rem; text-shadow: 2px 2px #fff;">Papaddy ✿</h1>
+        <p style="color:var(--dark); font-weight: 400; margin:10px 0 20px;">
+            รับทำป้าย เเอพพรีเมี่ยม 24 Hours ˚˖𓍢ִ໋🦢˚
+        </p>
+
+        <div style="display:flex; justify-content:center; gap:10px; margin-bottom:20px;">
+            <span style="background:var(--white); padding:5px 15px; border-radius:20px; border:1px solid var(--main); font-size:12px;">♡ รับทำป้าย</span>
+            <span style="background:var(--white); padding:5px 15px; border-radius:20px; border:1px solid var(--main); font-size:12px;">♡ เเอปพรีเมี่ยม</span>
+        </div>
+
+        <a href="https://docs.google.com/spreadsheets/d/1V0PWpH1MFnA2Jw686bdZR_-lXejP2eiEzp2rAGcYfOY/edit?usp=sharing" target="_blank" class="btn btn-outline">
+            เช็คคิวงานป้าย 📋
+        </a>
     </div>
 
     <div class="section">
-        <h2 style="text-align: center; margin-bottom: 15px;">✿ เงื่อนไขการสั่งงาน</h2>
-        <div class="price-row"><span>1. รองานภายใน 24 ชม.</span></div>
-        <div class="price-row"><span>2. ติดคิวรอ 1-2 วัน</span></div>
-        <div class="price-row" style="border-left-color: var(--dark);"><span>3. งานเร่ง +60.-</span></div>
-        <a href="https://docs.google.com/spreadsheets/d/1V0PWpH1MFnA2Jw686bdZR_-lXejP2eiEzp2rAGcYfOY/edit?usp=sharing" target="_blank" class="btn btn-main">เช็คคิวงานป้าย 📋</a>
+        <h2 style="margin-bottom:15px; font-size: 1.2rem;">✿ เงื่อนไขการสั่งงานป้าย</h2>
+        <div class="step"><div class="step-num">1</div><div style="margin-left:10px">รองานปกติภายใน 24 ชม.</div></div>
+        <div class="step" style="margin-top:10px"><div class="step-num">2</div><div style="margin-left:10px">ติดคิวรอประมาณ 1-2 วัน</div></div>
+        <div class="step" style="margin-top:10px"><div class="step-num">3</div><div style="margin-left:10px">งานเร่ง +60.- (รอ 3-4 ชม.)</div></div>
+        
+        <a href="https://drive.google.com/drive/folders/1SX9TY0PaGhso-Ge4jUuT9nx5e4KegEsp?usp=drive_link" target="_blank" class="btn btn-main">ดูตัวอย่างงาน</a>
     </div>
 
     <div class="section">
-        <h2 style="text-align: center; margin-bottom: 15px;">♡ เมนูสั่งทำ</h2>
-        <a href="#" class="btn btn-main">♡ รายละเอียดสั่งทำป้าย</a>
-        <a href="#" class="btn btn-main" style="background: var(--pink); border-color: #e66a9a;">♡ สั่งเเอพพรีเมี่ยม</a>
+        <h2 style="margin-bottom:15px; font-size: 1.2rem;">♡ ข้อมูลต่างๆ </h2>
+        <a href="#" class="btn btn-main" style="background:var(--main); opacity:0.9;">♡ รายละเอียดสั่งทำป้าย</a>
+        <a href="#" class="btn btn-main" style="background:var(--main); opacity:0.8;">♡ รายละเอียดสั่งเเอพพรีเมี่ยม</a>
+        
+        <div style="margin-top:20px; border-top: 1px dashed var(--main); padding-top:15px;">
+            <div class="price-row"><span>เลือกของตกเเต่ง</span><b style="color:var(--dark)">Click</b></div>
+            <div class="price-row"><span>เลือกตัวตูน</span><b style="color:var(--dark)">Click</b></div>
+        </div>
     </div>
 
-    <div class="footer">
-        <a href="https://lin.ee/xbQgeBH" class="btn btn-main" style="border-radius: 50px;">สั่งงานทาง LINE 🎀</a>
-        <p style="margin-top: 20px; font-size: 12px;">© 2026 Papaddy ✿</p>
+    <div class="footer" style="text-align:center; padding-top:20px;">
+        <a href="https://lin.ee/xbQgeBH" target="_blank" class="btn btn-main" style="background: #50C878;">สั่งงานทาง LINE 🎀</a>
+        <p style="font-size:11px; color:var(--dark); margin-top:20px; opacity:0.7;">© 2026 Papaddy ✿ - All Rights Reserved</p>
     </div>
+
 </div>
 
 <script>
-// ปิดหน้า Loading เมื่อโหลดเสร็จ
+// --- Script: Loading Screen ---
 window.addEventListener('load', function() {
     const loader = document.getElementById('loader');
     setTimeout(() => {
         loader.style.opacity = '0';
         setTimeout(() => { loader.style.display = 'none'; }, 500);
-    }, 1500); // ตั้งเวลาโชว์ Loading ไว้ 1.5 วิ เพื่อความสวยงาม
+    }, 1500); // โชว์ Loading 1.5 วินาที
 });
 
-// หัวใจตอนคลิกแบบใหม่ ใหญ่สะใจ + สีชมพูฟุ้ง
-function createClickHeart(e) {
+// --- Script: Floating Emojis ---
+function createFloatingEmojis() {
+    const emojis = ['♡', '✿', '❀', '❤'];
+    for (let i = 0; i < 15; i++) {
+        const el = document.createElement('div');
+        el.className = 'floating-emoji';
+        el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.top = Math.random() * 100 + 'vh';
+        el.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        el.style.opacity = Math.random() * 0.5;
+        document.body.appendChild(el);
+    }
+}
+
+// --- Script: Multi-Layer Heart Click ---
+function createHeartClick(e) {
+    const x = e.clientX || (e.touches && e.touches[0].clientX);
+    const y = e.clientY || (e.touches && e.touches[0].clientY);
+    const scrollY = window.scrollY;
+
+    // 1. สร้างตัวหัวใจหลัก
     const heart = document.createElement('div');
     heart.className = 'click-heart';
     heart.innerText = '❤';
-
-    let x = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-    let y = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-
     heart.style.left = x + 'px';
-    heart.style.top = (y + window.scrollY) + 'px';
-
+    heart.style.top = (y + scrollY) + 'px';
     document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 800);
+
+    // 2. สร้างวงแหวนกระจาย (Ring Effect)
+    const ring = document.createElement('div');
+    ring.className = 'heart-ring';
+    ring.style.left = x + 'px';
+    ring.style.top = (y + scrollY) + 'px';
+    document.body.appendChild(ring);
+
+    setTimeout(() => { heart.remove(); ring.remove(); }, 800);
 }
 
-document.addEventListener('click', createClickHeart);
-document.addEventListener('touchstart', createClickHeart, {passive: true});
+document.addEventListener('mousedown', createHeartClick);
+document.addEventListener('touchstart', createHeartClick, {passive: true});
+createFloatingEmojis();
 </script>
 
 </body>
 </html>
-
