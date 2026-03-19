@@ -230,7 +230,42 @@ body {
     margin-bottom:10px; background:#FFF5F8;
     padding:12px 15px; border-radius:20px;
 }
-</style>
+</style> /* เอฟเฟกต์ความเงาวิ่งผ่านปุ่ม */
+.btn-main {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-main::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 20%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: rotate(30deg);
+    transition: 0.5s;
+    opacity: 0;
+}
+
+.btn-main:hover::after {
+    left: 120%;
+    opacity: 1;
+    transition: 0.8s;
+}
+
+/* ปรับ Price Row ให้ดูนุ่มนวลขึ้น */
+.price-row:hover {
+    background: var(--main);
+    color: white;
+    transform: translateX(10px);
+    transition: 0.3s;
+}
+
+.price-row:hover b {
+    color: white;
+}
 </head>
 
 <body>
@@ -352,7 +387,72 @@ function createHeartClick(e) {
 document.addEventListener('mousedown', createHeartClick);
 document.addEventListener('touchstart', createHeartClick, {passive: true});
 createFloatingEmojis();
-</script>
+</script> // --- 1. สร้าง Audio Context สำหรับเสียงปุกปิก ---
+// ใช้ URL เสียงตัวอย่าง (เสียง Bubble Pop น่ารักๆ)
+const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-20.mp3'); 
+const hoverSound = new Audio('https://www.soundjay.com/buttons/sounds/button-21.mp3');
+
+// ตั้งความดังให้พอดี ไม่ตกใจ
+clickSound.volume = 0.4;
+hoverSound.volume = 0.2;
+
+// --- 2. ฟังก์ชันทำให้ปุ่มมีเอฟเฟกต์เสียงและขยับ ---
+const buttons = document.querySelectorAll('.btn, .price-row');
+
+buttons.forEach(btn => {
+    // เสียงตอนเอาเมาส์ไปวาง (Hover)
+    btn.addEventListener('mouseenter', () => {
+        hoverSound.currentTime = 0; // Reset เสียงให้เริ่มใหม่ทันที
+        hoverSound.play().catch(e => {}); // catch ไว้กัน Error ถ้า Browser บล็อก
+    });
+
+    // เสียงตอนกด (Click) + เอฟเฟกต์ยุบตัว
+    btn.addEventListener('mousedown', () => {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => {});
+        
+        // เพิ่มลูกเล่นให้ปุ่มยุบตัวเล็กน้อยตอนกด
+        btn.style.transform = 'scale(0.95)';
+    });
+
+    btn.addEventListener('mouseup', () => {
+        btn.style.transform = 'scale(1.05)';
+    });
+});
+
+// --- 3. เพิ่มเอฟเฟกต์ Sparkle (ดาวกระจาย) ตอนคลิก ---
+function createSparkle(e) {
+    const x = e.clientX || (e.touches && e.touches[0].clientX);
+    const y = e.clientY || (e.touches && e.touches[0].clientY);
+    
+    for(let i=0; i<5; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.innerText = '✨';
+        sparkle.style.position = 'absolute';
+        sparkle.style.left = x + 'px';
+        sparkle.style.top = (y + window.scrollY) + 'px';
+        sparkle.style.pointerEvents = 'none';
+        sparkle.style.fontSize = Math.random() * 20 + 10 + 'px';
+        sparkle.style.zIndex = '10000';
+        
+        document.body.appendChild(sparkle);
+
+        const destinationX = (Math.random() - 0.5) * 100;
+        const destinationY = (Math.random() - 0.5) * 100;
+
+        const animation = sparkle.animate([
+            { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+            { transform: `translate(${destinationX}px, ${destinationY}px) scale(0)`, opacity: 0 }
+        ], {
+            duration: 600,
+            easing: 'cubic-bezier(0, .9, .57, 1)'
+        });
+
+        animation.onfinish = () => sparkle.remove();
+    }
+}
+
+document.addEventListener('mousedown', createSparkle);
 
 </body>
 </html>
